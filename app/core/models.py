@@ -50,9 +50,13 @@ class Achievement(models.Model):
     """Achievements associated with points"""
     achievement = models.CharField(max_length=1024)
     points = models.IntegerField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 
     def __str__(self):
         return self.achievement
+
 
 class StudentAchievement(models.Model):
     """Associates achievements with students"""
@@ -65,7 +69,36 @@ class StudentAchievement(models.Model):
         on_delete=models.CASCADE,    
     )
     notes = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.achievement.achievement
 
+
+class Reward(models.Model):
+    """Rewards for achievements"""
+    reward = models.CharField(max_length=1024)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.reward
+
+class StudentReward(models.Model):
+    """Associates rewards with students"""
+    student = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    reward = models.ForeignKey(
+        Reward,
+        on_delete=models.CASCADE,    
+    )
+    notes = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.reward.reward
