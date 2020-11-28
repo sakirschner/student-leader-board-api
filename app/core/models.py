@@ -32,9 +32,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that supports using email instead of username"""
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     email = models.EmailField(max_length=255, unique=True)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    user_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255, blank=True)
+    last_name = models.CharField(max_length=255, blank=True)
+    user_name = models.CharField(max_length=255, blank=True)
     level = models.IntegerField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
