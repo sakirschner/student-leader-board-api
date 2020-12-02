@@ -1,3 +1,8 @@
+import tempfile
+import os
+
+from PIL import Image 
+
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -14,6 +19,13 @@ ME_URL = reverse('user:me')
 def create_user(**params): 
     return get_user_model().objects.create_user(**params)
 
+def image_upload_url(user_id):
+    """Return URL for user image upload"""
+    return reverse('user:user-upload-image', args=[user_id])
+
+# def detail_url(recipe_id):
+#     """Return recipe deatail URL"""
+#     return reverse('recipe:recipe-detail', args=[recipe_id])
 
 class PublicUserApiTests(TestCase):
     """Test the users API (public)"""
@@ -123,20 +135,12 @@ class PrivateUserApiTests(TestCase):
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
 
-    # def test_retrieve_profile_success(self):
-    #    """Test retrieving profile for logged in user"""
-    #    res = self.client.get(ME_URL)
+    def test_retrieve_profile_success(self):
+       """Test retrieving profile for logged in user"""
+       res = self.client.get(ME_URL)
 
-    #    self.assertEqual(res.status_code, status.HTTP_200_OK)
-    #    self.assertEqual(res.data, {
-    #        'id': self.user.id,
-    #        'uuid': self.user.uuid,
-    #        'email': self.user.email,
-    #        'first_name': '', 
-    #        'last_name': '', 
-    #        'user_name': '',
-    #        'level': None
-    #    })
+       self.assertEqual(res.status_code, status.HTTP_200_OK)
+       self.assertEqual(res.data['id'], self.user.id)
     
     def test_post_me_not_allowed(self):
         """Test that POST is not allowed on the me url"""
@@ -156,3 +160,30 @@ class PrivateUserApiTests(TestCase):
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password(payload['password']))        
         self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+class UserImageUploadTests(TestCase):
+
+    def setUp(self):
+        self.client = APIClient()       
+        self.user = get_user_model().objects.create_user(
+            'scott@gmail.com',
+            'testpass'
+        )
+        self.client.force_authenticate(self.user)
+
+    def tearDown(self):
+        self.user.image.delete()
+
+    def test_upload_image_to_user(self):
+        """Test uploading an image to a user"""
+        url = image_upload_url(self.user.id)
+        with tempfile.NamedTemporaryFile(suffix='.jpg') as ntf:
+            img = Image.new('RGB', (10,10))
+            img.save(ntf, format='JPEG')
+            ntf.seek(0)
+            res = self.client.post(url, {'image': ntf}, format='multipart') 
+
+        self.user.refresh_from_db()
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertIn('image', res.data)
+        self.assertTrue(os.path.exists(self.user.image.path))
