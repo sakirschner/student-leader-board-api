@@ -44,7 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
     user_name = models.CharField(max_length=255, blank=True)
-    level = models.IntegerField(blank=True, null=True)
+    level = models.IntegerField(blank=True, default=0)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -59,7 +59,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Achievement(models.Model):
     """Achievements associated with points"""
     achievement = models.CharField(max_length=1024)
-    points = models.IntegerField(blank=True, null=True)
+    points = models.IntegerField(blank=True, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -78,7 +78,7 @@ class StudentAchievement(models.Model):
         Achievement,
         on_delete=models.CASCADE,    
     )
-    notes = models.TextField()
+    notes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -89,7 +89,7 @@ class StudentAchievement(models.Model):
 class Reward(models.Model):
     """Rewards for achievements"""
     reward = models.CharField(max_length=1024)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -106,7 +106,7 @@ class StudentReward(models.Model):
         Reward,
         on_delete=models.CASCADE,    
     )
-    notes = models.TextField()
+    notes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

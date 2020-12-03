@@ -64,5 +64,7 @@ class PrivateAchievementAPITests(TestCase):
         url = detail_url(achievement.id)
         res = self.client.get(url)
         serializer = AchievementSerializer(achievement)
-        
+
         self.assertEqual(res.data, serializer.data)
+    
+        

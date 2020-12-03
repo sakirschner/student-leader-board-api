@@ -4,6 +4,16 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 
 from core import models
+from core.models import Achievement
+
+
+def sample_user(email='scott@test.com', password='testpass'):
+    """Create a sample user"""
+    return get_user_model().objects.create_user(email, password)
+
+def sample_achievement(achievement='Had camera on for a full day'):
+    """Create and return a sample achievement"""
+    return Achievement.objects.create(achievement=achievement)
 
 
 class ModelTests(TestCase):
@@ -59,3 +69,13 @@ class ModelTests(TestCase):
             points=3
         )
         self.assertEqual(str(achievement), achievement.achievement)
+
+    def test_studentachievement_str(self):
+        """Test the studentachievement string representation"""
+        studentachievement = models.StudentAchievement.objects.create(
+            student=sample_user(),
+            achievement=sample_achievement(),
+            notes='sample test'
+        )
+
+        self.assertEqual(str(studentachievement), studentachievement.achievement.achievement)

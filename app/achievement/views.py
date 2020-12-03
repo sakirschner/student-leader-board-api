@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from django.shortcuts import get_object_or_404
 
-from core.models import Achievement
+from core.models import Achievement, StudentAchievement
 from achievement import serializers
 
 
@@ -20,7 +20,7 @@ class AchievementViewSet(viewsets.GenericViewSet,
     serializer_class = serializers.AchievementSerializer
 
     def get_queryset(self):
-        """Return objects for the current authenticated user only"""
+        """Return all objects"""
         return self.queryset
 
     def perform_create(self, serializer):
@@ -38,9 +38,32 @@ class GetAchievementByIdView(generics.RetrieveUpdateDestroyAPIView):
         """Return object for user"""
         return Achievement.objects.get(id=self.kwargs['pk'])
 
-    # def retrieve(self, request, pk=None):
-    #     """Return appropriate serializer class"""
-    #     achievement = get_object_or_404(self.queryset, pk=pk)
-    #     serializer = serializers.AchievementSerializer()
-    #     print(serializer.data)
-    #     return Response(serializer.data)
+
+class StudentAchievementViewSet(viewsets.GenericViewSet,
+                         viewsets.ViewSet,
+                         mixins.ListModelMixin,
+                         mixins.CreateModelMixin):
+    """Manage Achievements in the database"""
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    queryset = StudentAchievement.objects.all()
+    serializer_class = serializers.StudentAchievementSerializer
+
+    def get_queryset(self):
+        """Return all objects"""
+        return self.queryset
+
+    def perform_create(self, serializer):
+        """Create a new object"""
+        serializer.save()
+
+
+class GetStudentAchievementByIdView(generics.RetrieveUpdateDestroyAPIView):
+    """Lists single studentachievement from the database by id"""
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.StudentAchievementSerializer
+
+    def get_object(self, **kwargs):
+        """Return object for user"""
+        return StudentAchievement.objects.get(id=self.kwargs['pk'])
