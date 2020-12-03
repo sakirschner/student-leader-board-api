@@ -79,3 +79,11 @@ class ModelTests(TestCase):
         )
 
         self.assertEqual(str(studentachievement), studentachievement.achievement.achievement)
+
+    def test_reward_str(self):
+        """Test the reward string representation"""
+        reward = models.Reward.objects.create(
+            reward='Test Reward',
+            description='Test Description'
+        )
+        self.assertEqual(str(reward), reward.reward)

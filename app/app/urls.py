@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/user/', include('user.urls')),
     path('api/achievement/', include('achievement.urls')),
+    path('api/reward/', include('reward.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
