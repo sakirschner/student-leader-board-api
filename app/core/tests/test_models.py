@@ -1,5 +1,9 @@
+from unittest.mock import patch
+
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+
+from core import models
 
 
 class ModelTests(TestCase):
@@ -37,3 +41,21 @@ class ModelTests(TestCase):
 
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
+    
+    @patch('uuid.uuid4')
+    def test_user_file_name_uuid(self, mock_uuid):
+        """Test that image is saved in the correct loaction"""
+        uuid = 'test-uuid'
+        mock_uuid.return_value = uuid
+        file_path = models.user_image_file_path(None, 'myimage.jpg')
+
+        exp_path = f'uploads/user/{uuid}.jpg'
+        self.assertEqual(file_path, exp_path)
+
+    def test_achievement_str(self):
+        """Test the achievement string representation"""
+        achievement = models.Achievement.objects.create(
+            achievement='Had computer on',
+            points=3
+        )
+        self.assertEqual(str(achievement), achievement.achievement)

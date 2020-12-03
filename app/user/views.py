@@ -72,7 +72,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return self.serializer_class
 
-    @action(methods=['POST'], detail=True, url_path='upload-image')
+    @action(methods=['POST', 'GET'], detail=True, url_path='upload-image')
     def upload_image(self,request, pk=None):
         """Upload an image to a user"""
         user = self.get_object()

@@ -8,11 +8,12 @@ from core import models
 class UserAdmin(BaseUserAdmin):
     ordering = ['created_at']
     list_display = ['email', 'first_name', 'last_name', 'created_at']
-    readonly_fields = ('id', 'uuid', 'created_at', 'updated_at',)
+    readonly_fields = ('id', 'created_at', 'updated_at',)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Personal Info'), {'fields': ('id', 'uuid', 'first_name', 'last_name', 'user_name')}),
+        (_('Personal Info'), {'fields': ('id', 'first_name', 'last_name', 'user_name')}),
         (_('Level'), {'fields': ('level',)}),
+        (_('Avatar'), {'fields': ('image',)}),
         (
             _('Permissions'),
             {'fields': ('is_active', 'is_staff', 'is_superuser')}

@@ -37,12 +37,13 @@ class PublicUserApiTests(TestCase):
         """Test creating user with valid payload is successful"""
         payload = {
             'email': 'scott@gmail.com',
-            'password': 'testpass',
+            'password': 'testpass123',
+            'first_name': 'scott',
         }
         res = self.client.post(CREATE_USER_URL, payload)
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
-        user = get_user_model().objects.get(**res.data)
+        user = get_user_model().objects.get(pk=res.data['id'])
         self.assertTrue(user.check_password(payload['password']))
         self.assertNotIn('password', res.data)
     
@@ -50,7 +51,7 @@ class PublicUserApiTests(TestCase):
         """Test creating a user that already exists fails"""
         payload = {
             'email': 'scott@gmail.com',
-            'password': 'testpass',
+            'password': 'testpass123',
         }
         create_user(**payload)
 

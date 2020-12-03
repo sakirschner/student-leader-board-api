@@ -12,7 +12,7 @@ def user_image_file_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = f'{uuid.uuid4()}.{ext}'
 
-    return os.path.join('uploads/recipe/', filename)
+    return os.path.join('uploads/user/', filename)
 
 
 class UserManager(BaseUserManager):
@@ -39,7 +39,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that supports using email instead of username"""
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+    # uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
