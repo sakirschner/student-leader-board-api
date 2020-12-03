@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
-from core.models import Achievement, StudentAchievement, User
+from core.models import Achievement, StudentAchievement
 
 
 class AchievementSerializer(serializers.ModelSerializer):

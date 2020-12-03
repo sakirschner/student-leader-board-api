@@ -23,7 +23,7 @@ class AchievementViewSet(viewsets.GenericViewSet,
 
     def perform_create(self, serializer):
         """Create a new object"""
-        serializer.save(user=self.request.user)
+        serializer.save()
 
 
 class GetAchievementByIdView(generics.RetrieveUpdateDestroyAPIView):

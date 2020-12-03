@@ -63,7 +63,6 @@ class Achievement(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
     def __str__(self):
         return self.achievement
 
@@ -89,7 +88,7 @@ class StudentAchievement(models.Model):
 class Reward(models.Model):
     """Rewards for achievements"""
     reward = models.CharField(max_length=1024)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
